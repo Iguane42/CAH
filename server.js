@@ -12,9 +12,27 @@ function start(route, handle) {
 	console.log("Démarrage du serveur.");
 	var io = require("socket.io").listen(server);
 	console.log("Démarrage de Socket.io")
-	// io.on('connection', function (socket) {
-	// 	var ControlleurSocket = require('./ControlleurSocket');
- //  	});
+	var aJoueurs = [];
+	io.on('connection', function (socket) {
+		var szRoom = 'room_test';
+		socket.join(szRoom);
+		var ControlleurSocket = require('./ControlleurSocket');
+		var oControlleurSocket = new ControlleurSocket(szRoom, aJoueurs);
+		oControlleurSocket.vJoin(function(oResponse){
+			io.to(szRoom).emit('update', oResponse);
+			socket.on('disconnect', function(){
+				aJoueurs[oResponse.oNouveauJoueur.nNumero - 1] = null;
+				oControlleurSocket.vLeave(aJoueurs, function(oResponse){
+					io.to(szRoom).emit('update', oResponse);
+				});
+			});
+		});
+		socket.on('action', function(oRequest){
+			oControlleurSocket.vExecuteAction(oRequest, function(oResponse){
+				io.to(szRoom).emit('update', oResponse);
+			});
+		})
+  	});
 }
 
 exports.start = start;

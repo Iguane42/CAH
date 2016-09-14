@@ -12,11 +12,14 @@ function Partie()
 			oThat.vAnimateCarte($('div.main div.carte:first'));
 		});
 
-		// var socket = io('http://localhost');
-		// 	socket.on('news', function (data) {
-		// 	console.log(data);
-		// 	socket.emit('my other event', { my: 'data' });
-		// });
+		var socket = io('http://192.168.33.10:8888');
+		socket.on('update', function (oResponse) {
+			if (typeof (oResponse.oNouveauJoueur) != 'undefined') {
+				console.log('connexion du joueur '+oResponse.oNouveauJoueur.nNumero+' ( '+oResponse.oNouveauJoueur.szPseudo+' ).');
+			} else if (typeof oResponse.oDeconnexionJoueur != 'undefined') {
+				console.log('déconnexion du joueur '+oResponse.oDeconnexionJoueur.nNumero+' ( '+oResponse.oDeconnexionJoueur.szPseudo+' ).');
+			}
+		});
 
 	}
 
