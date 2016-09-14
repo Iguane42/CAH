@@ -24,5 +24,16 @@ function test(response) {
   
 }
 
+function play(response) {
+  response.writeHead(200, {"Content-Type": "text/html"});
+  var ControlleurHTML = require('./ControlleurHTML');
+  var oControlleurHTML = new ControlleurHTML('page');
+  oControlleurHTML.oCallView('plateau', function(szContenu){
+    response.write(szContenu)
+    response.end();
+  });
+}
+
 exports.start = start;
 exports.test = test;
+exports.play = play;

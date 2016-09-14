@@ -4,13 +4,10 @@ function Core()
 
 	this.vInit = function()
 	{
-		setTimeout(function(){
-			var socket = io('http://192.168.33.10:8888');
-				socket.on('news', function (data) {
-				console.log(data);
-			socket.emit('my other event', { my: 'data' });
-			});
-		}, 7000);
+		if ($('div.main').length > 0) {
+			var oPartie = new Partie();
+			oPartie.vInit();
+		}
 	};
 }
 

@@ -26,9 +26,17 @@ div.carte {
 	border: 2px solid white;
 	display: inline-block;
 	border-radius: 15px;
-	padding: 20px 20px 20px 20px;
-	height: 30% !important;
-	width: 8% !important;
+	padding: 20px;
+	height: 194px;
+	width: 118px;
+}
+
+div.div_carte {
+	text-align: center;
+	position: relative;
+	display: inline-block;
+	height: 238px;
+	width: 162px;
 }
 
 div.carte span {
@@ -38,4 +46,33 @@ div.carte span {
 
 div.carte span.dos_carte {
 	font-size: 27px;
+}
+
+div.clear {
+	display: inline-block;
+}
+
+a.bouton {
+
+    color: white;
+    text-decoration: none;
+    margin-top: 20px;
+    display: inline-block;
+    padding: 5px 15px 5px 15px;
+    border-radius: 7px;
+    border: 2px solid white;
+}
+
+a.bouton:hover {
+	color: black;
+	background-color: white;
+}
+
+a.bouton:active {
+	color: white;
+	border-color: black;
+}
+
+div.main {
+	padding-top: 50px;
 }

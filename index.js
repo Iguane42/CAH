@@ -8,5 +8,6 @@ var handle = {}
 handle["/"] = requestHandlers.start;
 handle["/start"] = requestHandlers.start;
 handle["/test"] = requestHandlers.test;
+handle["/play"] = requestHandlers.play;
 
 server.start(router.route, handle);

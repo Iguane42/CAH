@@ -10,6 +10,9 @@ ControlleurHTML.prototype.oCallView = function(szMode, oCallback)
 	var szFichier = '';
 	var szContenu = '';
 	switch(szMode) {
+		case 'plateau' :
+			szFichier = 'plateau.html';
+			break;
         default :
         	szFichier = 'accueil.html';
         	break;
