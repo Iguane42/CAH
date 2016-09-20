@@ -7,7 +7,7 @@ aContentTypes['css'] = 'text/css';
 
 function route(handle, pathname, response, request) {
   //console.log("Début du traitement de l'URL " + pathname + ".");
-  var oRegex = new RegExp(/^(?!.+socket.io.+).+\.(css|js|png|jpg|jpeg)$/i);
+  var oRegex = new RegExp(/^(?!.+socket.io.+).+\.(css|js|png|jpg|jpeg|gif)$/i);
   //console.log(pathname.match(oRegex));
   if (typeof handle[pathname] === 'function') {
     handle[pathname](response, request);

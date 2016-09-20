@@ -147,3 +147,32 @@ div.div_message {
     padding-top: 5px;
     padding-bottom: 5px;
 }
+
+.contenu_calque {
+	position: absolute;
+	top:30%;
+	left: 33.33%;
+	width: 33.33%;
+	height: 30%;
+	border: 2px solid white;
+	background-color: black;
+	border-radius: 25px;
+}
+
+.calque {
+	position: fixed;
+	z-index: 2;
+	width: 100%;
+	height: 100vh;
+	background-color: rgba(0, 0, 0, 0.7);
+}
+
+img.img_loader {
+	position: relative;
+    height: 60%;
+}
+
+.message_attente {
+	display: block;
+	padding-top: 6vh;
+}

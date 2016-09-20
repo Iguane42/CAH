@@ -3,14 +3,15 @@ function Partie()
 	Core.apply(this, arguments);
 	oThat = this;
 	this.bIsBoss = false;
+	this.oLoader = new Loader();
 
 	this.vInit = function()
 	{
-		
-
 		var socket = io('http://192.168.33.10:8888');
+		this.oLoader.vOuvreCalque('En attente de joueurs...');
 		socket.on('update', function (oResponse) {
 			if (typeof (oResponse.oNouveauJoueur) != 'undefined') {
+
 				if ($('.liste_joueurs input.nIdJoueur[value='+oResponse.oNouveauJoueur.nNumero+']').length == 0) {
 					var oClone = $('.liste_joueurs .un_joueur.clone').clone();
 					oClone.removeClass('clone');
@@ -37,6 +38,7 @@ function Partie()
 				$('.liste_joueurs input.nIdJoueur[value='+oResponse.oDeconnexionJoueur.nNumero+']').parent('.un_joueur').remove();
 				//console.log('déconnexion du joueur '+oResponse.oDeconnexionJoueur.nNumero+' ( '+oResponse.oDeconnexionJoueur.szPseudo+' ).');
 			} else if (typeof oResponse.oNouvelleManche != 'undefined') {
+				oThat.oLoader.vFermeCalque();
 				$('div.main div_carte:not(.clone)').remove();
 				$('div.propositions div_carte:not(.clone)').remove();
 				if (oResponse.oNouvelleManche.vous.bIsBoss === true) {

@@ -10,6 +10,7 @@ ControlleurRest.prototype.oGetRessource = function(szFileName, szExtension, oCal
 		case 'png' :
 		case 'jpg' :
 		case 'jpeg' :
+		case 'gif' :
 			szChemin = 'img';
 			break;
 		case 'css' :
