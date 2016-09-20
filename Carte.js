@@ -5,21 +5,40 @@ function Carte()
 	//this.test = 'salut!';
 	bddBrain = require("./bddBrain");
 	this.oBdd = new bddBrain();
+	this.aMappingChamps = new Array();
+	this.aMappingChamps['id_carte'] = 'nIdCarte';
+	this.aMappingChamps['type'] = 'szType';
+	this.aMappingChamps['contenu'] = 'szContenu';
 }
 
-Carte.prototype.aGetCartes = function(oClasse, oCallback)
+Carte.prototype.aGetCartes = function(oCallback, oPartie, aRecherche)
 {
-	//oBdd = require('./bddBrain');
-	//console.log(this.test);
-	var szRequete = "SELECT id_carte, type, contenu FROM carte";
+	//console.log(oPartie);
+	if (typeof oPartie.aCartesTombees != 'undefined' && oPartie.aCartesTombees != null) {
+		var szCartesJouees = '';
+		oPartie.aCartesTombees.forEach(function(nIdCarte, nIndice){
+			if (nIndice > 0){
+				szCartesJouees += ', ';
+			}
+			szCartesJouees += "'"+nIdCarte+"'";
+		});
+		aRecherche['szCartesJouees'] = szCartesJouees;
+	}
+	var szRequete = "SELECT id_carte, type, contenu FROM carte WHERE 1=1"+this.szGetCriteres(aRecherche);
+	var oThat = this;
+	//console.log(szRequete);
 	this.oBdd.aSelect(szRequete, this, function(aElements){
 		if (aElements !== false) {
 			var oElements = [];
-			//console.log(aElements)
 			aElements.forEach(function(oElement, nIndex, aElements){
-				oElements[nIndex] = oElement;
+				//console.log(oElement.id_carte);
+				oPartie.aCartesTombees.push(oElement.id_carte);
+				oElements[nIndex] = {};
+				Object.keys(oThat.aMappingChamps).forEach(function(szIndex){
+					oElements[nIndex][oThat.aMappingChamps[szIndex]] = oElement[szIndex];
+				});
 			});
-			oCallback.apply(oClasse, [oElements]);
+			oCallback(oElements);
 		} else {
 			return;
 		}
@@ -27,6 +46,26 @@ Carte.prototype.aGetCartes = function(oClasse, oCallback)
 	//console.log(oBdd);
 	
 };
+
+Carte.prototype.szGetCriteres = function(aRecherche) {
+	var szClauseWhere = '';
+	if (typeof aRecherche['szCartesJouees'] != 'undefined' &&  aRecherche['szCartesJouees'] != '') {
+		szClauseWhere += ' AND id_carte NOT IN ('+aRecherche['szCartesJouees']+')';
+	}
+	if (typeof aRecherche['nIdCarte'] != 'undefined' &&  aRecherche['nIdCarte'] != '') {
+		szClauseWhere += " AND id_carte = '"+aRecherche['nIdCarte']+"'";
+	}
+	if (typeof aRecherche['szType'] != 'undefined' &&  aRecherche['szType'] != '') {
+		szClauseWhere += " AND type = '"+aRecherche['szType']+"'";
+	}
+	if (typeof aRecherche['bRandom'] != 'undefined' &&  aRecherche['bRandom'] == true) {
+		szClauseWhere += ' ORDER BY RAND()';
+	}
+	if (typeof aRecherche['nLimite'] != 'undefined' &&  aRecherche['nLimite'] > 0) {
+		szClauseWhere += ' LIMIT '+aRecherche['nLimite'];
+	}
+	return szClauseWhere;
+}
 
 	//exports.aGetCartes = this.aGetCartes;
 
