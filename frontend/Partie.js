@@ -2,6 +2,7 @@ function Partie()
 {
 	Core.apply(this, arguments);
 	oThat = this;
+	this.bIsBoss = false;
 
 	this.vInit = function()
 	{
@@ -36,8 +37,19 @@ function Partie()
 				$('.liste_joueurs input.nIdJoueur[value='+oResponse.oDeconnexionJoueur.nNumero+']').parent('.un_joueur').remove();
 				//console.log('déconnexion du joueur '+oResponse.oDeconnexionJoueur.nNumero+' ( '+oResponse.oDeconnexionJoueur.szPseudo+' ).');
 			} else if (typeof oResponse.oNouvelleManche != 'undefined') {
+				$('div.main div_carte:not(.clone)').remove();
+				$('div.propositions div_carte:not(.clone)').remove();
+				if (oResponse.oNouvelleManche.vous.bIsBoss === true) {
+					$('div.main').hide();
+					$('div.propositions').show();
+					oThat.bIsBoss = true;
+				} else {
+					$('div.main').show();
+					$('div.propositions').hide();
+					oThat.bIsBoss = false;
+				}
+
 				oResponse.oNouvelleManche.vous.aMain.forEach(function(oCarte){
-					console.log(oCarte);
 					var oClone = $('div.main div.div_carte.clone').clone();
 					oClone.removeClass('clone');
 					oClone.find('input.nIdCarte').val(oCarte.nIdCarte);
@@ -45,6 +57,15 @@ function Partie()
 					$('div.main').append(oClone);
 				});
 				oThat.vDynamiseCartes();
+				$('div.pioche div.zone_depot').droppable({
+					drop: function(e,ui){
+						var oClone = $(this).find('.message_depot').clone();
+						$(this).find('.message_depot').hide();
+						oClone.find('span').text(ui.draggable.find('span.face_carte').text()).removeClass('.message_depot');
+						$(this).append(oClone);
+						ui.draggable.remove();
+					}
+				});
 			}
 		});
 		socket.on('vous', function(oResponse){
@@ -94,6 +115,10 @@ function Partie()
 
 	this.vAnimateCarte = function(oCarte)
 	{
+		oCarte.unbind('click');
+		oCarte.draggable({
+			revert: "invalid"
+		});
 		var oDivCarte = oCarte;
 		oDivCarte.animate({
 			width: '0px',
