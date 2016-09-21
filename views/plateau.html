@@ -3,7 +3,9 @@
 	<div class="pioche">
 		<div class="div_carte">
 			<div class="carte carte_noire">
+				<input type="hidden" class='nIdCarte'/>
 				<span class="dos_carte">Cards<br/>Against<br/>Humanity</span>
+				<span class="face_carte" style="display:none;">Ceci est une carte de test.</span>
 			</div>
 		</div>
 		<div droppable="true" class="div_carte zone_depot">
@@ -12,17 +14,17 @@
 			</div>
 		</div>
 	</div>
-	<div class="liste_joueurs">
-		<div class="clone un_joueur">
+	<table class="liste_joueurs">
+		<tr class="clone un_joueur">
 			<input type="hidden" name="nIdJoueur" class="nIdJoueur" value=""/>
-			<div class="div_message">
+			<td class="div_message">
 				<div class="encaps_message">
 					<span class="szMessage"></span>
 				</div>
-			</div>
-			<span><img class="szAvatar" src="/userdefault.png"/><span class="szPseudo"></span></span>
-		</div>
-	</div>
+			</td>
+			<td><img class="szAvatar" src="/userdefault.png"/></td><td><table><tr><td><span class="szPseudo"></span></td></tr><tr><td><span class="szStatut"></span></td></tr></table></td>
+		</tr>
+	</table>
 	<div class="clear"></div>
 	<div class="main">
 		<div class="div_carte clone">

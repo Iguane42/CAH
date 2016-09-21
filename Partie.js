@@ -3,6 +3,7 @@ function Partie(szRoom)
 	this.szRoom = szRoom;
 	this.aJoueurs = new Array();
 	this.aCartesTombees = new Array();
+	this.Carte = require('./Carte');
 }
 
 Partie.prototype.vLancer = function(oCallback)
@@ -10,8 +11,14 @@ Partie.prototype.vLancer = function(oCallback)
 	this.vLaverJoueurs();
 	var nIndice = Math.floor(Math.random() * this.aJoueurs.length);
 	this.aJoueurs[nIndice].bIsBoss = true;
-	this.vTirerCartes(0, oCallback);
-	//console.log(this.aCartesTombees);
+	var oCarte = new this.Carte();
+	oThat = this;
+	oCarte.vTirerCarteNoire(this, function(oCarteNoire){
+		oThat.vTirerCartes(0, function(oResponse, oJoueur){
+			oResponse.oNouvelleManche.oCarteNoire = oCarteNoire;
+			oCallback(oResponse, oJoueur);
+		});
+	});
 };
 
 Partie.prototype.vLaverJoueurs = function()
@@ -29,6 +36,7 @@ Partie.prototype.vTirerCartes = function(nIndice, oCallback)
 {
 	var oJoueur = this.aJoueurs[nIndice];
 	var oResponse = {};
+	
 	var oThat = this;
 	oJoueur.vTireMain(oThat, function(){
 		var oBuffer = {};
@@ -47,6 +55,7 @@ Partie.prototype.vTirerCartes = function(nIndice, oCallback)
 			oThat.vTirerCartes(nIndice+1, oCallback);
 		}
 	});
+	
 };
 
 module.exports = Partie;

@@ -67,6 +67,17 @@ Carte.prototype.szGetCriteres = function(aRecherche) {
 	return szClauseWhere;
 }
 
+Carte.prototype.vTirerCarteNoire = function(oPartie, oCallback) {
+	var aRecherche = [];
+	aRecherche['szType'] = 'noire';
+	aRecherche['bRandom'] = true;
+	aRecherche['nLimite'] = 1;
+	this.aGetCartes(function(aCarte){
+		var oCarte = aCarte[0];
+		oCallback(oCarte);
+	}, oPartie, aRecherche);
+}
+
 	//exports.aGetCartes = this.aGetCartes;
 
 

@@ -33,15 +33,17 @@ function Partie()
 					}
 					
 				});
-				//console.log('connexion du joueur '+oResponse.oNouveauJoueur.nNumero+' ( '+oResponse.oNouveauJoueur.szPseudo+' ).');
 			} else if (typeof oResponse.oDeconnexionJoueur != 'undefined') {
 				$('.liste_joueurs input.nIdJoueur[value='+oResponse.oDeconnexionJoueur.nNumero+']').parent('.un_joueur').remove();
-				//console.log('déconnexion du joueur '+oResponse.oDeconnexionJoueur.nNumero+' ( '+oResponse.oDeconnexionJoueur.szPseudo+' ).');
 			} else if (typeof oResponse.oNouvelleManche != 'undefined') {
+				$('div.pioche .carte_noire .face_carte').text(oResponse.oNouvelleManche.oCarteNoire.szContenu);
+				$('div.pioche .carte_noire .nIdCarte').val(oResponse.oNouvelleManche.oCarteNoire.nIdCarte);
+				oThat.vAnimateCarte($('div.pioche .carte_noire'),false);
 				oThat.oLoader.vFermeCalque();
 				$('div.main div_carte:not(.clone)').remove();
 				$('div.propositions div_carte:not(.clone)').remove();
 				if (oResponse.oNouvelleManche.vous.bIsBoss === true) {
+					oThat.oLoader.vOuvreCalque('Vous êtes le boss, En attente des autres Joueurs...');
 					$('div.main').hide();
 					$('div.propositions').show();
 					oThat.bIsBoss = true;
@@ -50,7 +52,14 @@ function Partie()
 					$('div.propositions').hide();
 					oThat.bIsBoss = false;
 				}
-
+				$.each(oResponse.oNouvelleManche.aJoueurs, function(nCompteur, oJoueur){
+					console.log(oJoueur);
+					var szStatut = 'Réfléchit...';
+					if (oJoueur.bIsBoss == true) {
+						szStatut = 'BOSS';
+					}
+					$('.liste_joueurs input.nIdJoueur[value='+oJoueur.nNumero+']').parent('.un_joueur').find('.szStatut').text(szStatut);
+				});
 				oResponse.oNouvelleManche.vous.aMain.forEach(function(oCarte){
 					var oClone = $('div.main div.div_carte.clone').clone();
 					oClone.removeClass('clone');
@@ -89,16 +98,16 @@ function Partie()
 			oZoneMessage.find(".szMessage").append('<div>'+oData.message+'</div>');
 			//oZoneMessage.show();
 			oZoneMessage.animate({
-				height: '50px',
-				width: '170px'
+				height: '5vh',
+				width: '100%'
 			}, 100);
 			setTimeout(function() {
 				//
 				oZoneMessage.find(".szMessage div").first().remove();
 				if (oZoneMessage.find('.szMessage').text() == '') {
 					oZoneMessage.animate({
-						height: '0px',
-						width: '0px'
+						height: '0%',
+						width: '0%'
 					}, 100);
 				}
 			}, 5000);
@@ -111,20 +120,21 @@ function Partie()
 		oDivCarte.unbind('click');
 		oDivCarte.click(function(e){
 			e.preventDefault();
-			oThat.vAnimateCarte($('div.main div.carte:first'));
+
+			oDivCarte.unbind('click');
+			oDivCarte.draggable({
+				revert: "invalid"
+			});
+			oThat.vAnimateCarte($('div.main div.carte:first'), true);
 		});
 	};
 
-	this.vAnimateCarte = function(oCarte)
+	this.vAnimateCarte = function(oCarte, bRecursif)
 	{
-		oCarte.unbind('click');
-		oCarte.draggable({
-			revert: "invalid"
-		});
 		var oDivCarte = oCarte;
 		oDivCarte.animate({
 			width: '0px',
-			padding: '20px 0px 20px 0px',
+			padding: '1vh 0px 1vh 0px',
 		}, 30, function(){
 			$(this).animate({
 				opacity: 0,
@@ -135,12 +145,14 @@ function Partie()
 					opacity: 1,
 				}, 5, function(){
 					$(this).animate({
-						width: '118px',
-						padding: '20px',
+						width: '16vh',
+						padding: '1vh',
 					}, 30, function(){
-						var oNewCard = $(this).parent('div.div_carte').next('div.div_carte').find('div.carte');
-						if (oNewCard.length > 0) {
-							oThat.vAnimateCarte(oNewCard);
+						if (bRecursif) {	
+							var oNewCard = $(this).parent('div.div_carte').next('div.div_carte').find('div.carte');
+							if (oNewCard.length > 0) {
+								oThat.vAnimateCarte(oNewCard, true);
+							}
 						}
 					});
 				});
