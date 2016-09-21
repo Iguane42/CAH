@@ -1,8 +1,20 @@
+/**
+ * Contrôlleur d'accès aux ressources.
+ */
 function ControlleurRest()
 {
 	ControlleurRest.fs = require('fs');
 }
 
+/**
+ * Récupère la ressource demandée.
+ * 
+ * @param  {string} szFileName  Nom du fichier.
+ * @param  {string} szExtension Extension du fichier.
+ * @param  {object} oCallback   Callback appelée à la fin des traitements su système de fichier.
+ * 
+ * @return {void}             
+ */
 ControlleurRest.prototype.oGetRessource = function(szFileName, szExtension, oCallback)
 {
 	var szChemin;

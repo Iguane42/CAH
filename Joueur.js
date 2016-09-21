@@ -1,3 +1,8 @@
+/**
+ * Joueur.
+ * 
+ * @param {integer} nNumero Numero de joueur.
+ */
 function Joueur(nNumero)
 {
 	this.nNumero = nNumero;
@@ -7,6 +12,13 @@ function Joueur(nNumero)
 	this.bIsBoss = false;
 }
 
+/**
+ * Permet de retourner l'object joueur sans les informations inutiles.
+ * 
+ * @param  {object} oCallback Callback appelée à la fin des traitements (inutile).
+ * 
+ * @return {void}           
+ */
 Joueur.prototype.oGetJoueur = function(oCallback)
 {
 	var oBuffer = {};
@@ -17,7 +29,15 @@ Joueur.prototype.oGetJoueur = function(oCallback)
 	oCallback(oBuffer);
 };
 
-Joueur.prototype.vTireMain = function(oPartie,oCallback)
+/**
+ * Permet au joueur de tirer sa main.
+ * 
+ * @param  {object} oPartie   Partie en cours.
+ * @param  {object} oCallback Callback appelée à la fin des traitements BDD.
+ * 
+ * @return {void}           
+ */
+Joueur.prototype.vTireMain = function(oPartie, oCallback)
 {
 	var Carte = require('./Carte');
 	var oCarte = new Carte();

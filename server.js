@@ -1,6 +1,14 @@
 var http = require("http");
 var url = require("url");
 
+/**
+ * Initialisation du serveur
+ * 
+ * @param  {object} route  Routeur.
+ * @param  {object} handle Handler.
+ * 
+ * @return {void}        
+ */
 function start(route, handle) {
 	function onRequest(request, response) {
 		var pathname = url.parse(request.url).pathname;
@@ -11,7 +19,7 @@ function start(route, handle) {
 	var server = http.createServer(onRequest).listen(8888);
 	console.log("Démarrage du serveur.");
 	var io = require("socket.io").listen(server);
-	console.log("Démarrage de Socket.io")
+	console.log("Démarrage de Socket.io");
 	//var aJoueurs = [];
 	var szRoom = (Math.random() + 1).toString(36).substring(7);
 	var Partie = require("./Partie");

@@ -1,9 +1,22 @@
+/**
+ * Contrôlleur d'accès aux templates HTML.
+ * 
+ * @param {string} szType Type de template (page complète ou contentpane).
+ */
 function ControlleurHTML(szType)
 {
 	this.szType = szType;
 	ControlleurHTML.fs = require("fs");
 }
 
+/**
+ * Permet de récupérer une vue.
+ * 
+ * @param  {string} szMode    Vue appelée.
+ * @param  {object} oCallback Callback appelée après la génération de la vue.
+ * 
+ * @return {void}           
+ */
 ControlleurHTML.prototype.oCallView = function(szMode, oCallback)
 {
 	var oStream;
@@ -39,6 +52,13 @@ ControlleurHTML.prototype.oCallView = function(szMode, oCallback)
 	
 };
 
+/**
+ * Permet de récupérer le header de la page.
+ * 
+ * @param  {object} oCallback Callback appelée après la récupération du header.
+ * 
+ * @return {void}           
+ */
 ControlleurHTML.prototype.oGetHeader = function(oCallback)
 {
 	ControlleurHTML.fs.readFile('./views/header.html', function(err, szContenu){
@@ -47,6 +67,13 @@ ControlleurHTML.prototype.oGetHeader = function(oCallback)
 	
 };
 
+/**
+ * Permet de récupérer le footer de la page.
+ * 
+ * @param  {object} oCallback Callback appelée après la récupération du footer.
+ * 
+ * @return {void}           
+ */
 ControlleurHTML.prototype.oGetFooter = function(oCallback)
 {
 	ControlleurHTML.fs.readFile('./views/footer.html', function(err, szContenu){

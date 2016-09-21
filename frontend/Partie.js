@@ -1,10 +1,18 @@
+/**
+ * Gestion de l'affichage de la partie.
+ */
 function Partie()
 {
 	Core.apply(this, arguments);
 	oThat = this;
 	this.bIsBoss = false;
 	this.oLoader = new Loader();
-
+	
+	/**
+	 * Initialisation de la partie.
+	 * 
+	 * @return {void} 
+	 */
 	this.vInit = function()
 	{
 		var socket = io('http://192.168.33.10:8888');
@@ -36,6 +44,7 @@ function Partie()
 			} else if (typeof oResponse.oDeconnexionJoueur != 'undefined') {
 				$('.liste_joueurs input.nIdJoueur[value='+oResponse.oDeconnexionJoueur.nNumero+']').parent('.un_joueur').remove();
 			} else if (typeof oResponse.oNouvelleManche != 'undefined') {
+				console.log(oResponse);
 				$('div.pioche .carte_noire .face_carte').text(oResponse.oNouvelleManche.oCarteNoire.szContenu);
 				$('div.pioche .carte_noire .nIdCarte').val(oResponse.oNouvelleManche.oCarteNoire.nIdCarte);
 				oThat.vAnimateCarte($('div.pioche .carte_noire'),false);
@@ -114,6 +123,11 @@ function Partie()
 		});
 	}
 
+	/**
+	 * Dynamisation des cartes de la main.
+	 * 
+	 * @return {void} 
+	 */
 	this.vDynamiseCartes = function()
 	{
 		var oDivCarte = $('div.main div.carte');
@@ -129,6 +143,14 @@ function Partie()
 		});
 	};
 
+	/**
+	 * Animer une carte.
+	 * 
+	 * @param  {object}  oCarte    Carte à animer.
+	 * @param  {boolean} bRecursif Mode récursif (pour la main).
+	 * 
+	 * @return {void}           
+	 */
 	this.vAnimateCarte = function(oCarte, bRecursif)
 	{
 		var oDivCarte = oCarte;

@@ -1,3 +1,8 @@
+/**
+ * Contrôleur spécifique à une partie.
+ * 
+ * @param {string} szRoom Id de la salle.
+ */
 function Partie(szRoom)
 {
 	this.szRoom = szRoom;
@@ -6,6 +11,13 @@ function Partie(szRoom)
 	this.Carte = require('./Carte');
 }
 
+/**
+ * Permet de démarrer une partie.
+ * 
+ * @param  {object} oCallback Callback appelée à la fin des retours BDD.
+ * 
+ * @return {void}           
+ */
 Partie.prototype.vLancer = function(oCallback)
 {
 	this.vLaverJoueurs();
@@ -21,6 +33,11 @@ Partie.prototype.vLancer = function(oCallback)
 	});
 };
 
+/**
+ * Permet de laver le tableau des joueurs (OK c'est crade mais c'est temporaire, je prévois de mettre des bots!)
+ * 
+ * @return {void} 
+ */
 Partie.prototype.vLaverJoueurs = function()
 {
 	var aBuffer = new Array();
@@ -32,6 +49,14 @@ Partie.prototype.vLaverJoueurs = function()
 	this.aJoueurs = aBuffer;
 };
 
+/**
+ * Fait tirer les cartes à tous les joueurs.
+ * 
+ * @param  {integer} nIndice   Indice du premier joueur (pour la récursivité).
+ * @param  {object}  oCallback Callback appelée à la fin des retours BDD.
+ * 
+ * @return {void}           
+ */
 Partie.prototype.vTirerCartes = function(nIndice, oCallback)
 {
 	var oJoueur = this.aJoueurs[nIndice];

@@ -1,3 +1,6 @@
+/**
+ * Modèle de données carte.
+ */
 function Carte()
 {
 	// var bddBrain = require("./bddBrain");
@@ -11,6 +14,15 @@ function Carte()
 	this.aMappingChamps['contenu'] = 'szContenu';
 }
 
+/**
+ * Récupère les cartes en fonction des critères de recherche.
+ * 
+ * @param  {object} oCallback  Callback appelée après le retour BDD.
+ * @param  {object} oPartie    Partie en cours.
+ * @param  {array}  aRecherche Critères de recherche.
+ * 
+ * @return {void}            
+ */
 Carte.prototype.aGetCartes = function(oCallback, oPartie, aRecherche)
 {
 	//console.log(oPartie);
@@ -27,7 +39,7 @@ Carte.prototype.aGetCartes = function(oCallback, oPartie, aRecherche)
 	var szRequete = "SELECT id_carte, type, contenu FROM carte WHERE 1=1"+this.szGetCriteres(aRecherche);
 	var oThat = this;
 	//console.log(szRequete);
-	this.oBdd.aSelect(szRequete, this, function(aElements){
+	this.oBdd.aSelect(szRequete, function(aElements){
 		if (aElements !== false) {
 			var oElements = [];
 			aElements.forEach(function(oElement, nIndex, aElements){
@@ -35,6 +47,7 @@ Carte.prototype.aGetCartes = function(oCallback, oPartie, aRecherche)
 				oPartie.aCartesTombees.push(oElement.id_carte);
 				oElements[nIndex] = {};
 				Object.keys(oThat.aMappingChamps).forEach(function(szIndex){
+					//console.log(nIndex+' : '+oThat.aMappingChamps[szIndex]);
 					oElements[nIndex][oThat.aMappingChamps[szIndex]] = oElement[szIndex];
 				});
 			});
@@ -47,6 +60,13 @@ Carte.prototype.aGetCartes = function(oCallback, oPartie, aRecherche)
 	
 };
 
+/**
+ * Permet de récupérer la clause where en fonction de critères de recherche.
+ * 
+ * @param  {array}  aRecherche Critères de recherche.
+ * 
+ * @return {string}            Clause where.
+ */
 Carte.prototype.szGetCriteres = function(aRecherche) {
 	var szClauseWhere = '';
 	if (typeof aRecherche['szCartesJouees'] != 'undefined' &&  aRecherche['szCartesJouees'] != '') {
@@ -67,6 +87,14 @@ Carte.prototype.szGetCriteres = function(aRecherche) {
 	return szClauseWhere;
 }
 
+/**
+ * Permet de récupérer une carte noire au hasard.
+ * 
+ * @param  {object} oPartie   Partie en cours.
+ * @param  {object} oCallback Callback appelée après le retour BDD.
+ * 
+ * @return {void}           
+ */
 Carte.prototype.vTirerCarteNoire = function(oPartie, oCallback) {
 	var aRecherche = [];
 	aRecherche['szType'] = 'noire';

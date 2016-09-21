@@ -5,6 +5,16 @@ aContentTypes['jpeg'] = 'image/jpeg';
 aContentTypes['js'] = 'application/javascript';
 aContentTypes['css'] = 'text/css';
 
+/**
+ * Routeur
+ * 
+ * @param  {object} handle   Handler.
+ * @param  {string} pathname Chemin.
+ * @param  {object} response Réponse.
+ * @param  {object} request  Requète.
+ * 
+ * @return {void}          
+ */
 function route(handle, pathname, response, request) {
   //console.log("Début du traitement de l'URL " + pathname + ".");
   var oRegex = new RegExp(/^(?!.+socket.io.+).+\.(css|js|png|jpg|jpeg|gif)$/i);

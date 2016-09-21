@@ -1,3 +1,6 @@
+/**
+ * Kernel
+ */
 function Core()
 {
 	var oThat = this;
