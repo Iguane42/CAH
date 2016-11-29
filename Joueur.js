@@ -42,12 +42,33 @@ Joueur.prototype.vTireMain = function(oPartie, oCallback)
 	var Carte = require('./Carte');
 	var oCarte = new Carte();
 	var aRecherche = new Array();
+	var nNbCartes = 0;
+	if (typeof this.aMain == 'undefined') {
+		nNbCartes = 10;
+	} else {
+		this.aMain.forEach(function(oCarte){
+			if (oCarte == null) {
+				nNbCartes ++;
+			}
+		});
+	}
 	aRecherche['szType'] = 'blanche';
 	aRecherche['bRandom'] = true;
-	aRecherche['nLimite'] = 10;
+	aRecherche['nLimite'] = nNbCartes;
 	var oThat = this;
 	oCarte.aGetCartes(function(aCartes){
-		oThat.aMain = aCartes;
+		if (nNbCartes == 10) {
+			oThat.aMain = aCartes;
+		} else {
+			var nCpt = 0;
+			oThat.aMain.forEach(function(oCarte){
+				if (oCarte == null) {
+					oCarte = aCartes[nCpt];
+					console.log(oThat.szPseudo+" a tiré "+oCarte.szContenu);
+					nCpt ++;
+				}
+			});
+		}
 		oCallback();
 	}, oPartie, aRecherche);
 };

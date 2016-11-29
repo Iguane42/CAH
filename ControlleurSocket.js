@@ -50,9 +50,13 @@ ControlleurSocket.prototype.vLeave = function(oJoueur, oCallback)
  * 
  * @return {void}           
  */
-ControlleurSocket.prototype.vExecuteAction = function(oCallback)
+ControlleurSocket.prototype.vExecuteAction = function(nNumero, oResponse, oCallback)
 {
-
+	if (typeof oResponse.nIdCarteJouee != 'undefined') {
+		this.oPartie.vJouerCarte(nNumero, oResponse.nIdCarteJouee, oCallback);
+	} else if (typeof oResponse.nIdCarteElue != 'undefined') {
+		this.oPartie.vElireCarte(nNumero, oResponse.nIdCarteElue, oCallback);
+	}
 }
 
 /**

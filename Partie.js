@@ -6,9 +6,10 @@
 function Partie(szRoom)
 {
 	this.szRoom = szRoom;
-	this.aJoueurs = new Array();
+	this.aJoueurs = [];
 	this.aCartesTombees = new Array();
 	this.Carte = require('./Carte');
+	this.aCartesTour = []
 }
 
 /**
@@ -18,11 +19,19 @@ function Partie(szRoom)
  * 
  * @return {void}           
  */
-Partie.prototype.vLancer = function(oCallback)
+Partie.prototype.vLancer = function(oCallback, nIdBoss)
 {
 	this.vLaverJoueurs();
-	var nIndice = Math.floor(Math.random() * this.aJoueurs.length);
-	this.aJoueurs[nIndice].bIsBoss = true;
+	if (typeof nIdBoss == 'undefined') {
+		var nIndice = Math.floor(Math.random() * this.aJoueurs.length);
+		this.aJoueurs[nIndice].bIsBoss = true;
+	} else {
+		this.aJoueurs.forEach(function(oElem, nIndex){
+			if (oElem.nNumero == nIdBoss) {
+				oElem.bIsBoss = true;
+			}
+		});	
+	}
 	var oCarte = new this.Carte();
 	oThat = this;
 	oCarte.vTirerCarteNoire(this, function(oCarteNoire){
@@ -54,6 +63,7 @@ Partie.prototype.vLaverJoueurs = function()
  * 
  * @param  {integer} nIndice   Indice du premier joueur (pour la récursivité).
  * @param  {object}  oCallback Callback appelée à la fin des retours BDD.
+ *
  * 
  * @return {void}           
  */
@@ -82,5 +92,100 @@ Partie.prototype.vTirerCartes = function(nIndice, oCallback)
 	});
 	
 };
+
+Partie.prototype.vJouerCarte = function(nNumero, nIdCarte, oCallback)
+{
+	var oCarte = new this.Carte();
+	var aRecherche = new Array();
+	aRecherche['nIdCarte'] = nIdCarte;
+	aRecherche['nLimite'] = 1;
+	var oThat = this;
+	oCarte.aGetCartes(function(aCarte){
+		oThat.aJoueurs.forEach(function(oJoueur){
+			if (oJoueur.nNumero == nNumero) {
+				oThat.aCartesTour[oJoueur.nNumero] = aCarte[0];
+				oJoueur.aMain.forEach(function(oCarte){
+					if (oCarte.nIdCarte == nIdCarte) {
+						console.log(oJoueur.szPseudo+" a joué "+oCarte.szContenu);
+						oCarte = null;
+					}
+				});
+				var nNbCartes = 0;
+				oThat.aCartesTour.forEach(function(oCarteTour){
+					if (oCarteTour != 'null') {
+						nNbCartes ++;
+					}
+				});
+				var oResponse = {};
+				if (nNbCartes > 3) {
+					var aCartesReponse = [];
+					oThat.aCartesTour.forEach(function(oCarteTour, nIndice){
+						if (oCarteTour != 'null') {
+							var nOrdre = Math.floor(Math.random() * 4);
+							while (typeof aCartesReponse[nOrdre] != 'undefined') {
+								nOrdre = Math.floor(Math.random() * 4);
+							}
+							aCartesReponse[nOrdre] = oCarteTour;
+						}
+					});
+					oResponse = {nNumJoueurAJoue: oJoueur.nNumero, aCartesJouees: aCartesReponse};
+				} else {
+					oResponse = {nNumJoueurAJoue: oJoueur.nNumero};
+				}
+				oCallback(oResponse);
+			}
+		});
+	},null, aRecherche);
+	
+}
+
+Partie.prototype.vElireCarte = function(nNumero, nIdCarte, oCallback) {
+	var oThat = this;
+	this.aJoueurs.forEach(function(oJoueur){
+		if (oJoueur.nNumero == nNumero) {
+			if (oJoueur.bIsBoss === true) {
+				oThat.aCartesTour.forEach(function(oCarte, nIndice){
+					if (oCarte.nIdCarte == nIdCarte) {
+						oThat.aJoueurs.forEach(function(oVainqueur){
+							if (oVainqueur.nNumero == nIndice) {
+								oVainqueur.nNbPoints += 5;
+								oVainqueur.oGetJoueur(function(oVainqueur){
+									var oResponse = {oVainqueurManche:oVainqueur, oCarteElue:oCarte};
+									oCallback(oResponse);
+									setTimeout(function(){
+										oThat.vReinit(oCallback, oVainqueur.nNumero);
+									},8000);
+								});
+							}
+						});
+					}
+				});
+			}
+		}
+	});
+	
+}
+
+Partie.prototype.vReinit = function(oCallback, nNumero) {
+	this.aCartesTour = [];
+	var oReponse = {};
+	var bFinPartie = false;
+	this.aJoueurs.forEach(function(oJoueur){
+		oJoueur.bIsBoss = false;
+		if (oJoueur.nNbPoints >= 5) {
+			oJoueur.oGetJoueur(function(oElem){
+				oReponse.oVainqueur = oElem;
+			});
+			bFinPartie = true;
+		}
+	})
+	if (bFinPartie === true) {
+		oReponse.bFinPartie = bFinPartie;
+		oCallback(oReponse);
+	} else {
+		this.vLancer(oCallback, nNumero);
+	}
+	
+}
 
 module.exports = Partie;

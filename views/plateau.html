@@ -10,7 +10,8 @@
 		</div>
 		<div droppable="true" class="div_carte zone_depot">
 			<div class="carte carte_blanche message_depot">
-				<span>Déposez votre carte ici.</span>
+				<span class="face_carte">Déposez votre carte ici.</span>
+				<span class="dos_carte" style="display: none;">Cards<br/>Against<br/>Humanity</span>
 			</div>
 		</div>
 	</div>
@@ -23,6 +24,17 @@
 				</div>
 			</td>
 			<td><img class="szAvatar" src="/userdefault.png"/></td><td><table><tr><td><span class="szPseudo"></span></td></tr><tr><td><span class="szStatut"></span></td></tr></table></td>
+			<td class="score">
+				<table>
+					<tr>
+						<td><img class="point_score vide" src="/point-vide.png"/></td>
+						<td><img class="point_score vide" src="/point-vide.png"/></td>
+						<td><img class="point_score vide" src="/point-vide.png"/></td>
+						<td><img class="point_score vide" src="/point-vide.png"/></td>
+						<td><img class="point_score vide" src="/point-vide.png"/></td>
+					</tr>
+				</table>
+			</td>
 		</tr>
 	</table>
 	<div class="clear"></div>
@@ -40,7 +52,7 @@
 		<div class="div_carte clone">
 			<div class="carte carte_blanche">
 				<input type="hidden" class='nIdCarte'/>
-				<span class="face_carte" style="display:none;">Ceci est une carte de test.</span>
+				<span class="face_carte">Ceci est une carte de test.</span>
 			</div>
 		</div>
 		
@@ -52,5 +64,11 @@
 	<div class="contenu_calque">
 		<span class="message_attente"></span>
 		<img class="img_loader" src="/loader.gif"/>
+	</div>
+</div>
+
+<div class="message_central" style="display: none;">
+	<div class="contenu_calque" style="width: 0%;height: 0%;">
+		<span class="message" style="opacity: 0"></span>
 	</div>
 </div>

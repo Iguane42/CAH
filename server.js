@@ -50,16 +50,22 @@ function start(route, handle) {
 				if (nNbJoueurs >= 5) {
 					oControlleurPartie.vLancerPartie(function(oResponse, oJoueur){
 						aMappingSocket[oJoueur.szHashSocket].emit('update', oResponse);
-						socket.on('action', function(oRequest){
-							oControlleurPartie.vExecuteAction(oRequest, function(oResponse){
-								io.to(oControlleurPartie.szRoom).emit('update', oResponse);
-							});
-						});
 					});
 					szRoom = (Math.random() + 1).toString(36).substring(7);
 					oPartie = new Partie(szRoom);
 					oControlleurSocket = new ControlleurSocket(oPartie);
 				}
+			});
+			socket.on('action', function(oRequest){
+				//console.log(oRequest);
+				oControlleurPartie.vExecuteAction(oJoueur.nNumero, oRequest, function(oResponse, oJoueur){
+					if (typeof oJoueur == 'undefined') {
+						io.to(oControlleurPartie.oPartie.szRoom).emit('update', oResponse);
+					} else {
+						aMappingSocket[oJoueur.szHashSocket].emit('update', oResponse);
+					}
+					
+				});
 			});
 			socket.on('chat', function(oData){
 				io.to(oControlleurPartie.oPartie.szRoom).emit('chat', {joueur: oJoueur, message: oData.message});

@@ -26,7 +26,7 @@ function Carte()
 Carte.prototype.aGetCartes = function(oCallback, oPartie, aRecherche)
 {
 	//console.log(oPartie);
-	if (typeof oPartie.aCartesTombees != 'undefined' && oPartie.aCartesTombees != null) {
+	if (typeof oPartie != 'undefined' && oPartie != null && typeof oPartie.aCartesTombees != 'undefined' && oPartie.aCartesTombees != null) {
 		var szCartesJouees = '';
 		oPartie.aCartesTombees.forEach(function(nIdCarte, nIndice){
 			if (nIndice > 0){
@@ -44,7 +44,10 @@ Carte.prototype.aGetCartes = function(oCallback, oPartie, aRecherche)
 			var oElements = [];
 			aElements.forEach(function(oElement, nIndex, aElements){
 				//console.log(oElement.id_carte);
-				oPartie.aCartesTombees.push(oElement.id_carte);
+				if (typeof oPartie != 'undefined' && oPartie != null && typeof oPartie.aCartesTombees != 'undefined' && oPartie.aCartesTombees != null) {
+
+					oPartie.aCartesTombees.push(oElement.id_carte);
+				}
 				oElements[nIndex] = {};
 				Object.keys(oThat.aMappingChamps).forEach(function(szIndex){
 					//console.log(nIndex+' : '+oThat.aMappingChamps[szIndex]);

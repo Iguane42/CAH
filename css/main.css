@@ -154,21 +154,31 @@ td.div_message {
 
 .contenu_calque {
 	position: absolute;
-	top:30%;
+	top:20%;
 	left: 33.33%;
 	width: 33.33%;
 	height: 30%;
 	border: 2px solid white;
 	background-color: black;
 	border-radius: 10vh;
+	box-shadow: 5px 5px 5px black;
 }
 
 .calque {
+	text-align: center;
 	position: fixed;
 	z-index: 2;
 	width: 100%;
 	height: 100vh;
-	background-color: rgba(0, 0, 0, 0.7);
+	background-color: rgba(0, 0, 0, 0.5);
+}
+
+.message_central {
+	position: fixed;
+	width: 100%;
+	top: 20vh;
+	height: 60vh;
+	z-index: 2;
 }
 
 img.img_loader {
@@ -176,9 +186,17 @@ img.img_loader {
     height: 60%;
 }
 
-.message_attente {
+img.point_score {
+	height: 3%;
+}
+
+.message_attente, .message {
 	display: block;
 	padding-top: 6vh;
+}
+
+.message_central .message {
+	font-size: 3vh;
 }
 
 span.szStatut {
