@@ -104,10 +104,10 @@ Partie.prototype.vJouerCarte = function(nNumero, nIdCarte, oCallback)
 		oThat.aJoueurs.forEach(function(oJoueur){
 			if (oJoueur.nNumero == nNumero) {
 				oThat.aCartesTour[oJoueur.nNumero] = aCarte[0];
-				oJoueur.aMain.forEach(function(oCarte){
+				oJoueur.aMain.forEach(function(oCarte, nIndex){
 					if (oCarte.nIdCarte == nIdCarte) {
 						console.log(oJoueur.szPseudo+" a joué "+oCarte.szContenu);
-						oCarte = null;
+						oJoueur.aMain[nIndex] = null;
 					}
 				});
 				var nNbCartes = 0;
@@ -148,7 +148,7 @@ Partie.prototype.vElireCarte = function(nNumero, nIdCarte, oCallback) {
 					if (oCarte.nIdCarte == nIdCarte) {
 						oThat.aJoueurs.forEach(function(oVainqueur){
 							if (oVainqueur.nNumero == nIndice) {
-								oVainqueur.nNbPoints += 5;
+								oVainqueur.nNbPoints += 1;
 								oVainqueur.oGetJoueur(function(oVainqueur){
 									var oResponse = {oVainqueurManche:oVainqueur, oCarteElue:oCarte};
 									oCallback(oResponse);

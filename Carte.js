@@ -35,6 +35,7 @@ Carte.prototype.aGetCartes = function(oCallback, oPartie, aRecherche)
 			szCartesJouees += "'"+nIdCarte+"'";
 		});
 		aRecherche['szCartesJouees'] = szCartesJouees;
+		//console.log(szCartesJouees);
 	}
 	var szRequete = "SELECT id_carte, type, contenu FROM carte WHERE 1=1"+this.szGetCriteres(aRecherche);
 	var oThat = this;

@@ -44,6 +44,7 @@ Joueur.prototype.vTireMain = function(oPartie, oCallback)
 	var aRecherche = new Array();
 	var nNbCartes = 0;
 	if (typeof this.aMain == 'undefined') {
+		console.log(this.szPseudo + " tire sa main");
 		nNbCartes = 10;
 	} else {
 		this.aMain.forEach(function(oCarte){
@@ -51,6 +52,7 @@ Joueur.prototype.vTireMain = function(oPartie, oCallback)
 				nNbCartes ++;
 			}
 		});
+		//console.log(this.szPseudo + " tire " + nNbCartes + " carte(s)");
 	}
 	aRecherche['szType'] = 'blanche';
 	aRecherche['bRandom'] = true;
@@ -61,10 +63,10 @@ Joueur.prototype.vTireMain = function(oPartie, oCallback)
 			oThat.aMain = aCartes;
 		} else {
 			var nCpt = 0;
-			oThat.aMain.forEach(function(oCarte){
-				if (oCarte == null) {
-					oCarte = aCartes[nCpt];
-					console.log(oThat.szPseudo+" a tiré "+oCarte.szContenu);
+			oThat.aMain.forEach(function(oCarteMain){
+				if (oCarteMain == null) {
+					oCarteMain = aCartes[nCpt];
+					//console.log(oThat.szPseudo+" a tiré "+oCarteMain);
 					nCpt ++;
 				}
 			});
