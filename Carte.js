@@ -158,7 +158,7 @@ Carte.prototype.szGetListeCarte = function(oCallback, oParams) {
 Carte.prototype.szEditCarte = function(oCallback, oParams) {
 	var oElement = {};
 	oElement['type'] = oParams.szType;
-	oElement['contenu'] = oParams.szContenu;
+	oElement['contenu'] = oParams.szContenu.replace(/_/, "_______________");
 	if (typeof oParams.nIdCarte != 'undefined' && oParams.nIdCarte > 0) {
 		var szClauseWhere = "AND id_carte = '" + oParams.nIdCarte + "'";
 		this.oBdd.bUpdate('carte', oElement, szClauseWhere, function(){

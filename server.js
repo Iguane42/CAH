@@ -17,7 +17,7 @@ function start(route, handle) {
 	            //consider adding size limit here
 	            if (chunk != '') {
 	            	whole += "{";
-		            whole += chunk.toString().replace(/&/g,"',").replace(/=/g,":'");
+		            whole += chunk.toString().replace(/'/g, "\\'").replace(/&/g,"',").replace(/=/g,":'");
 		            whole += "'}";
 	            }
 	            

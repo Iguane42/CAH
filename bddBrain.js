@@ -84,7 +84,7 @@ bddBrain.prototype.bUpdate = function(szTable, aValues, szClauseWhere, oCallback
     if (nIndex > 0) {
       szQuery += ', ';
     }
-    szQuery += szIndex+' = '+ "'" + szValeur +"'";
+    szQuery += szIndex+' = '+ "'" + szValeur.replace(/'/g, "\\'") +"'";
     nIndex ++;
   });
   szQuery += ' WHERE 1=1 '+szClauseWhere;
@@ -118,7 +118,7 @@ bddBrain.prototype.bInsert = function(szTable, aValues, oCallback)
   Object.keys(aValues).forEach(function(szIndex){
     szValeur = aValues[szIndex];
     aChamps.push(szIndex);
-    aValeurs.push("'"+szValeur+"'");
+    aValeurs.push("'"+szValeur.replace(/'/g, "\\'")+"'");
   });
   szQuery += aChamps.join(',');
   szQuery += ' ) VALUES (' + aValeurs.join(',') + ')';
