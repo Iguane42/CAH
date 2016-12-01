@@ -11,5 +11,9 @@ var handle = {}
 handle["/"] = requestHandlers.start;
 handle["/start"] = requestHandlers.start;
 handle["/play"] = requestHandlers.play;
+handle["/admin"] = requestHandlers.admin;
+handle["/liste"] = requestHandlers.liste;
+handle["/edit"] = requestHandlers.edit;
+handle["/delete"] = requestHandlers.suppr;
 
 server.start(router.route, handle);

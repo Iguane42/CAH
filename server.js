@@ -11,9 +11,38 @@ var url = require("url");
  */
 function start(route, handle) {
 	function onRequest(request, response) {
-		var pathname = url.parse(request.url).pathname;
-		//console.log("Requête reçue pour le chemin " + pathname + ".");
-		route(handle, pathname, response, request);
+		if (request.method == 'POST') {
+			whole = '';
+	        request.on('data', function(chunk){
+	            //consider adding size limit here
+	            if (chunk != '') {
+	            	whole += "{";
+		            whole += chunk.toString().replace(/&/g,"',").replace(/=/g,":'");
+		            whole += "'}";
+	            }
+	            
+	        });
+
+	        request.on('end', function(){
+	        	params = {};
+	        	if (whole != '') {
+	        		eval("params="+whole);
+	        		console.log(params);
+	        		request.params = params;
+	        		var pathname = url.parse(request.url).pathname;
+					//console.log("Requête reçue pour le chemin " + pathname + ".");
+					route(handle, pathname, response, request);
+	        	}
+	        });
+		} else {
+			var pathname = url.parse(request.url).pathname;
+			//console.log("Requête reçue pour le chemin " + pathname + ".");
+			route(handle, pathname, response, request);
+		}
+
+		
+		
+		
 	}
 
 	var server = http.createServer(onRequest).listen(8888);

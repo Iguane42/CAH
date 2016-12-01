@@ -79,14 +79,16 @@ bddBrain.prototype.bUpdate = function(szTable, aValues, szClauseWhere, oCallback
   var oThat = this;
   var szQuery = 'UPDATE '+szTable+' SET ';
   var nIndex = 0;
-  aValues.forEach(function(szValeur, szIndex, aValues){
+  Object.keys(aValues).forEach(function(szIndex){
+    szValeur = aValues[szIndex];
     if (nIndex > 0) {
       szQuery += ', ';
     }
-    szQuery += szIndex+' = '+szValeur;
+    szQuery += szIndex+' = '+ "'" + szValeur +"'";
     nIndex ++;
   });
   szQuery += ' WHERE 1=1 '+szClauseWhere;
+  console.log(szQuery);
   this.bExecQuery(szQuery, function(err){
     if (err) {
       console.log('Erreur : ' +err);
@@ -111,16 +113,16 @@ bddBrain.prototype.bInsert = function(szTable, aValues, oCallback)
   var oThat = this;
   var szQuery = 'INSERT INTO '+szTable+' (';
   var szValeurs = '';
-  var nIndex = 0;
-  aValues.forEach(function(szValeur, szIndex, aValues){
-    if (nIndex > 0) {
-      szQuery += ', ';
-      szValeurs += ', ';
-    }
-    szQuery += szIndex;
-    szValeurs += szValeur;
+  var aChamps = [];
+  var aValeurs = [];
+  Object.keys(aValues).forEach(function(szIndex){
+    szValeur = aValues[szIndex];
+    aChamps.push(szIndex);
+    aValeurs.push("'"+szValeur+"'");
   });
-  szQuery += ' ) VALUES (' + szValeurs + ')';
+  szQuery += aChamps.join(',');
+  szQuery += ' ) VALUES (' + aValeurs.join(',') + ')';
+  console.log(szQuery);
   this.bExecQuery(szQuery, function(err){
     if (err) {
       console.log('Erreur : ' +err);
@@ -130,6 +132,18 @@ bddBrain.prototype.bInsert = function(szTable, aValues, oCallback)
     }
   });
 };
+
+bddBrain.prototype.bDelete = function(szTable, nId, oCallback) {
+  szQuery = "DELETE FROM "+szTable+" WHERE id_" + szTable + " = '" + nId + "'";
+  this.bExecQuery(szQuery, function(err){
+    if (err) {
+      console.log('Erreur : ' +err);
+      return false;
+    } else {
+      oCallback([]);
+    }
+  });
+}
 
 
 

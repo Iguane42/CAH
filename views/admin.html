@@ -1,0 +1,49 @@
+<div class="centre">
+	<h1>Administration des cartes</h1>
+	<form id="form_ajout_carte">
+		<h2>Nouvelle carte</h2>
+		<label for="szTypeNewCard">Type : </label>
+		<select class="szType" id="szTypeNewCard" name="szType">
+			<option value="blanche">Blanche</option>
+			<option value="noire">Noire</option>
+		</select>
+		<input type="text" name="szContenu" class="szContenu" placeholder="Contenu"/>
+		<div>
+			<input type="button" class="btn_ajout" value="Ajouter"/>
+		</div>
+	</form>
+	<table id="liste_cartes">
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>Type</th>
+				<th>Contenu</th>
+				<th>actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr class="clone">
+				
+				<input type="hidden" class="nIdCarte" name="nIdCarte"/>
+				<td class="nIdCarte"></td>
+				<td>
+					<select class="szType" name="szType">
+						<option value="blanche">Blanche</option>
+						<option value="noire">Noire</option>
+					</select>
+				</td>
+				<td><input type="text" class="szContenu" name="szContenu" value=""/></td>
+				<td><input type="button" class="btn_modif" value="Modifier"></input><input type="button" class="btn_suppr" value="Supprimer"></input></td>
+				
+			</tr>
+		</tbody>
+	</table>
+	
+	<div id="pagination">
+		<span class="first"><<</span>
+		<span class="previous"><</span>
+		<span class="clone page_number">#</span>
+		<span class="next">></span>
+		<span class="last">>></span>
+	</div>
+</div>

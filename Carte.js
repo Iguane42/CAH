@@ -64,6 +64,20 @@ Carte.prototype.aGetCartes = function(oCallback, oPartie, aRecherche)
 	
 };
 
+Carte.prototype.nGetNbCartes = function(aRecherche, oCallback) {
+	var szRequete = "SELECT COUNT(1) AS nb_cartes FROM carte WHERE 1=1"+this.szGetCriteres(aRecherche);
+	var oThat = this;
+	//console.log(szRequete);
+	this.oBdd.aSelect(szRequete, function(oElement){
+		if (oElement !== false) {
+			nNbCartes = oElement[0].nb_cartes;
+			oCallback(nNbCartes);
+		} else {
+			return;
+		}
+	});
+};
+
 /**
  * Permet de récupérer la clause where en fonction de critères de recherche.
  * 
@@ -85,11 +99,17 @@ Carte.prototype.szGetCriteres = function(aRecherche) {
 	if (typeof aRecherche['bRandom'] != 'undefined' &&  aRecherche['bRandom'] == true) {
 		szClauseWhere += ' ORDER BY RAND()';
 	}
+	
 	if (typeof aRecherche['nLimite'] != 'undefined' &&  aRecherche['nLimite'] > 0) {
-		szClauseWhere += ' LIMIT '+aRecherche['nLimite'];
+		szClauseWhere += ' LIMIT ';
+		if (typeof aRecherche['nStartWith'] != 'undefined' && aRecherche['nStartWith'] > 0) {
+			szClauseWhere += aRecherche['nStartWith'] + ', ';
+		}
+		szClauseWhere += aRecherche['nLimite'];
 	}
+
 	return szClauseWhere;
-}
+};
 
 /**
  * Permet de récupérer une carte noire au hasard.
@@ -108,7 +128,61 @@ Carte.prototype.vTirerCarteNoire = function(oPartie, oCallback) {
 		var oCarte = aCarte[0];
 		oCallback(oCarte);
 	}, oPartie, aRecherche);
-}
+};
+
+Carte.prototype.szGetListeCarte = function(oCallback, oParams) {
+	var aRecherche = [];
+	aRecherche['nLimite'] = 10;
+	aRecherche['nStartWith'] = 0;
+	var nNumPage = 1;
+	if (typeof oParams != 'undefined') {
+		if (typeof oParams.nNumPage != 'undefined' && oParams.nNumPage > 0) {
+			nNumPage = oParams.nNumPage;
+			aRecherche['nStartWith'] = (oParams.nNumPage - 1) * 10;
+			console.log(aRecherche['nStartWith']);
+		}
+	}
+	var oThat = this;
+	this.nGetNbCartes([], function(nNbCartes){
+		var oReponse = {};
+		oReponse.nNbPages = Math.ceil(nNbCartes/10);
+		oReponse.nNumPage = nNumPage;
+		oThat.aGetCartes(function(oElements){
+			oReponse.aCartes = oElements;
+			oCallback(JSON.stringify(oReponse));
+		},null,aRecherche);
+	});
+	
+};
+
+Carte.prototype.szEditCarte = function(oCallback, oParams) {
+	var oElement = {};
+	oElement['type'] = oParams.szType;
+	oElement['contenu'] = oParams.szContenu;
+	if (typeof oParams.nIdCarte != 'undefined' && oParams.nIdCarte > 0) {
+		var szClauseWhere = "AND id_carte = '" + oParams.nIdCarte + "'";
+		this.oBdd.bUpdate('carte', oElement, szClauseWhere, function(){
+			oCallback(JSON.stringify({szSucces : "La carte a bien été mise à jour."}));
+		});
+	} else {
+		this.oBdd.bInsert('carte', oElement, function(){
+			oCallback(JSON.stringify({szSucces : "La carte a bien été ajoutée."}));
+		});
+	}
+};
+
+Carte.prototype.szDeleteCarte = function(oCallback, oParams) {
+	if (typeof oParams.nIdCarte != 'undefined' && oParams.nIdCarte > 0) {
+
+		this.oBdd.bDelete('carte', oParams.nIdCarte, function(){
+			oCallback(JSON.stringify({szSucces : "La carte a bien été supprimée."}));
+		});
+	} else {
+		
+		oCallback(JSON.stringify({szSucces : "Echec de la suppression de la carte."}));
+
+	}
+};
 
 	//exports.aGetCartes = this.aGetCartes;
 

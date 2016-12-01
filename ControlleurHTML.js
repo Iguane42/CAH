@@ -7,6 +7,7 @@ function ControlleurHTML(szType)
 {
 	this.szType = szType;
 	ControlleurHTML.fs = require("fs");
+	this.bAdmin = false;
 }
 
 /**
@@ -22,9 +23,14 @@ ControlleurHTML.prototype.oCallView = function(szMode, oCallback)
 	var oStream;
 	var szFichier = '';
 	var szContenu = '';
+	this.bAdmin = false;
 	switch(szMode) {
 		case 'plateau' :
 			szFichier = 'plateau.html';
+			break;
+		case 'admin' :
+			this.bAdmin = true;
+			szFichier = 'admin.html';
 			break;
         default :
         	szFichier = 'accueil.html';
@@ -61,9 +67,16 @@ ControlleurHTML.prototype.oCallView = function(szMode, oCallback)
  */
 ControlleurHTML.prototype.oGetHeader = function(oCallback)
 {
-	ControlleurHTML.fs.readFile('./views/header.html', function(err, szContenu){
-		oCallback(szContenu);
-	});
+	if (this.bAdmin === false) {
+		ControlleurHTML.fs.readFile('./views/header.html', function(err, szContenu){
+			oCallback(szContenu);
+		});
+	} else {
+		ControlleurHTML.fs.readFile('./views/headerAdmin.html', function(err, szContenu){
+			oCallback(szContenu);
+		});
+	}
+	
 	
 };
 

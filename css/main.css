@@ -202,3 +202,32 @@ img.point_score {
 span.szStatut {
 	font-size: 75%;
 }
+
+#pagination span {
+	font-size: 3vh;
+	padding: 2px;
+}
+
+#pagination span:not(.selected) {
+	cursor: pointer;
+}
+
+#pagination span.selected {
+	font-size: 4vh;
+}
+
+#form_ajout_carte {
+	float: right;
+	padding-right: 20%;
+	padding-top: 20px;
+}
+
+#liste_cartes {
+	padding-left: 20%;
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+
+#form_ajout_carte .btn_ajout {
+	margin-top: 20px;
+}
