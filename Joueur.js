@@ -47,6 +47,7 @@ Joueur.prototype.vTireMain = function(oPartie, oCallback)
 		console.log(this.szPseudo + " tire sa main");
 		nNbCartes = 10;
 	} else {
+
 		this.aMain.forEach(function(oCarte){
 			if (oCarte == null) {
 				nNbCartes ++;
@@ -54,25 +55,32 @@ Joueur.prototype.vTireMain = function(oPartie, oCallback)
 		});
 		//console.log(this.szPseudo + " tire " + nNbCartes + " carte(s)");
 	}
-	aRecherche['szType'] = 'blanche';
-	aRecherche['bRandom'] = true;
-	aRecherche['nLimite'] = nNbCartes;
-	var oThat = this;
-	oCarte.aGetCartes(function(aCartes){
-		if (nNbCartes == 10) {
-			oThat.aMain = aCartes;
-		} else {
-			var nCpt = 0;
-			oThat.aMain.forEach(function(oCarteMain){
-				if (oCarteMain == null) {
-					oCarteMain = aCartes[nCpt];
-					//console.log(oThat.szPseudo+" a tiré "+oCarteMain);
-					nCpt ++;
-				}
-			});
-		}
+	if (nNbCartes > 0) {
+		aRecherche['szType'] = 'blanche';
+		aRecherche['bRandom'] = true;
+		aRecherche['nLimite'] = nNbCartes;
+		console.log('nLimite : ' + nNbCartes);
+		var oThat = this;
+		oCarte.aGetCartes(function(aCartes){
+			console.log('aCartes.length : ' + aCartes.length);
+			if (nNbCartes == 10) {
+				oThat.aMain = aCartes;
+			} else {
+				var nCpt = 0;
+				oThat.aMain.forEach(function(oCarteMain, nIndex){
+					if (oCarteMain == null) {
+						oThat.aMain[nIndex] = aCartes[nCpt];
+						console.log(oThat.szPseudo+" a tiré "+oCarteMain);
+						nCpt ++;
+					}
+				});
+			}
+			oCallback();
+		}, oPartie, aRecherche);
+	} else {
 		oCallback();
-	}, oPartie, aRecherche);
+	}
+	
 };
 
 module.exports = Joueur;
